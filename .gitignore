@@ -1,0 +1,21 @@
+# Ignore user-specific files
+*.user
+*.suo
+
+# Ignore Visual Studio folders
+.vs/
+bin/
+obj/
+
+# Ignore secrets
+appsettings.Development.json
+secrets.json
+
+# Ignore build outputs
+*.dll
+*.exe
+*.cache
+*.pdb
+
+# Others
+*.log
