@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 namespace AdvancedFinalProject.Models
+  
+
 {
 
 
@@ -18,7 +21,11 @@ namespace AdvancedFinalProject.Models
         [Required]
         
         public int CreatorId { get; set; }
+
+        [JsonIgnore]
         public User Creator { get; set; }
+
+        
 
         public List<User> Members { get; set; } = new();
 

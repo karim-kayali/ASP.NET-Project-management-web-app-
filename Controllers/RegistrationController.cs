@@ -29,8 +29,8 @@ namespace AdvancedFinalProject.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // If the model state is invalid, return the view with the user model and errors
-                return View(user);  // Pass the user model to the view to display the validation errors
+               
+                return View( );  
             }
 
             // Check if the username already exists
@@ -39,23 +39,27 @@ namespace AdvancedFinalProject.Controllers
             if (existingUserByUsername != null)
             {
                 ModelState.AddModelError(string.Empty, "Username is already taken");
-                return View(user);  // Return the user model with the error message
+                return View( );   
             }
 
-            // Check if the email already exists
+           
             var existingUserByEmail = await _context.users
                 .FirstOrDefaultAsync(u => u.Email == user.Email);
             if (existingUserByEmail != null)
             {
                 ModelState.AddModelError(string.Empty, "Email is already taken");
-                return View(user);  // Return the user model with the error message
+                return View( );   
             }
 
-            // If all checks pass, add the user
+
+            HttpContext.Session.SetInt32("UserId", user.UserId);  
+
+            
             _context.Add(user);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Dashboard");   // Redirect to Dashboard after successful sign-up
+            return View("~/Views/Projects/Index.cshtml");
+            
         }
 
 
@@ -94,7 +98,8 @@ namespace AdvancedFinalProject.Controllers
                 return View();
             }
 
-            return View("Dasboard");
+            HttpContext.Session.SetInt32("UserId", existingUser.UserId); // Or SetString if it's a Guid or string
+            return RedirectToAction("Index", "Projects");
 
 
         }

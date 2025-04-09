@@ -1,0 +1,64 @@
+﻿@model IEnumerable<AdvancedFinalProject.Models.Project>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectDescription)
+                    </td>
+                    <td>
+                        @if (item.Creator != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Creator.UserName)
+                        }
+                        else
+                        {
+                            <span>No creator assigned</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No projects found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
