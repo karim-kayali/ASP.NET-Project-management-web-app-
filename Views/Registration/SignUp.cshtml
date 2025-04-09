@@ -1,4 +1,4 @@
-﻿@model AdvancedFinalProject.Models.User
+﻿@model AdvancedFinalProject.DTO.UserDTO
 
 @{
     ViewData["Title"] = "SignUp";
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="SignUp">
+        <form asp-action="SignUp" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>  
 
             <div class="form-group">

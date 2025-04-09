@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AdvancedFinalProject;
 using AdvancedFinalProject.Models;
 using Microsoft.AspNetCore.Identity;
+using AdvancedFinalProject.DTO;
 
 namespace AdvancedFinalProject.Controllers
 {
@@ -48,10 +49,7 @@ namespace AdvancedFinalProject.Controllers
             var project = await _context.projects
                 .Include(p => p.Creator)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
+          
 
             return View(project);
         }
@@ -63,7 +61,7 @@ namespace AdvancedFinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string ProjectTitle, string? ProjectDescription)
+        public async Task<IActionResult> Create(ProjectDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -77,8 +75,8 @@ namespace AdvancedFinalProject.Controllers
             }
 
             Project project = new Project();
-            project.ProjectDescription = ProjectDescription;
-            project.ProjectTitle = ProjectTitle;
+            project.ProjectDescription = dto.ProjectDescription;
+            project.ProjectTitle = dto.ProjectTitle;
             project.CreatorId = userId.Value;
 
             _context.Add(project);
@@ -100,19 +98,19 @@ namespace AdvancedFinalProject.Controllers
         }
         [HttpPost]
         
-        public async Task<IActionResult> Edit(int ProjectId, string ProjectTitle, string ProjectDescription)
+        public async Task<IActionResult> Edit(int ProjectId, ProjectDTO dto)
         {
             var existingProject = await _context.projects.FindAsync(ProjectId);
           
-            existingProject.ProjectTitle = ProjectTitle;
-            existingProject.ProjectDescription = ProjectDescription;
+            existingProject.ProjectTitle = dto.ProjectTitle;
+            existingProject.ProjectDescription = dto.ProjectDescription;
 
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Projects/Delete/1
+    
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {

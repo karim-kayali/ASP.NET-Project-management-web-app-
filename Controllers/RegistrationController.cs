@@ -1,3 +1,4 @@
+using AdvancedFinalProject.DTO;
 using AdvancedFinalProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,13 +26,20 @@ namespace AdvancedFinalProject.Controllers
             return View("SignUp");
         }
         [HttpPost]
-        public async Task<IActionResult> SignUp(User user)
+        public async Task<IActionResult> SignUp(UserDTO dto)
         {
             if (!ModelState.IsValid)
             {
                
                 return View( );  
             }
+
+            var user = new User
+            {
+                UserName = dto.UserName,
+                Email = dto.Email,
+                Password = dto.Password, // Ideally hash this
+            };
 
             // Check if the username already exists
             var existingUserByUsername = await _context.users
@@ -72,18 +80,18 @@ namespace AdvancedFinalProject.Controllers
 
         [HttpPost]
       
-        public async Task<IActionResult> LogIn(string email, string password)
+        public async Task<IActionResult> LogIn(UserDTO dto)
         {
              
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
             {
                 ModelState.AddModelError(string.Empty, "Email and Password are required.");
                 return View();
             }
 
             var existingUser = await _context.users
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (existingUser == null)
             { 
@@ -91,7 +99,7 @@ namespace AdvancedFinalProject.Controllers
                 return View();
             }
 
-            if (existingUser.Password != password)
+            if (existingUser.Password != dto.Password)
             {
                 
                 ModelState.AddModelError(string.Empty, "Incorrect password.");
