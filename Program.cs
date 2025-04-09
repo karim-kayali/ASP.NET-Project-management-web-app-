@@ -17,7 +17,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(o =>
         new MySqlServerVersion(new Version(8, 0, 25))));
 
 
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor(); // Optional but good to have
+
+
 var app = builder.Build();
+
+
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -6,7 +6,6 @@ C:\Users\Karim\source\repos\AdvancedFinalProject\obj\Debug\net8.0\AdvancedFinalP
 C:\Users\Karim\source\repos\AdvancedFinalProject\obj\Debug\net8.0\AdvancedFinalProject.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Karim\source\repos\AdvancedFinalProject\obj\Debug\net8.0\AdvancedFinalProject.RazorAssemblyInfo.cache
 C:\Users\Karim\source\repos\AdvancedFinalProject\obj\Debug\net8.0\AdvancedFinalProject.RazorAssemblyInfo.cs
-C:\Users\Karim\source\repos\AdvancedFinalProject\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Karim\source\repos\AdvancedFinalProject\bin\Debug\net8.0\appsettings.json
 C:\Users\Karim\source\repos\AdvancedFinalProject\bin\Debug\net8.0\AdvancedFinalProject.staticwebassets.runtime.json
 C:\Users\Karim\source\repos\AdvancedFinalProject\bin\Debug\net8.0\AdvancedFinalProject.exe
@@ -496,3 +495,4 @@ D:\University\Advanced Programming\Final Project ~ Nadim Jreich & Karim Kayali\A
 D:\University\Advanced Programming\Final Project ~ Nadim Jreich & Karim Kayali\AdvancedProgramming\obj\Debug\net8.0\AdvancedFinalProject.pdb
 D:\University\Advanced Programming\Final Project ~ Nadim Jreich & Karim Kayali\AdvancedProgramming\obj\Debug\net8.0\AdvancedFinalProject.genruntimeconfig.cache
 D:\University\Advanced Programming\Final Project ~ Nadim Jreich & Karim Kayali\AdvancedProgramming\obj\Debug\net8.0\ref\AdvancedFinalProject.dll
+C:\Users\Karim\source\repos\AdvancedFinalProject\obj\Debug\net8.0\AdvancedFinalProject.sourcelink.json

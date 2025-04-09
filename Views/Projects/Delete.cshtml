@@ -1,0 +1,41 @@
+﻿@model AdvancedFinalProject.Models.Project
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProjectTitle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProjectTitle)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProjectDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProjectDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Creator.UserName)
+        </dd>
+    </dl>
+
+    <!-- Form for POST Delete -->
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ProjectId" />
+        <button type="submit" class="btn btn-danger">Delete</button> |
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
