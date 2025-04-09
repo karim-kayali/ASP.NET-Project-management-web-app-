@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AdvancedFinalProject.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AdvancedFinalProject.Models;
 using Microsoft.EntityFrameworkCore;
+using AdvancedFinalProject.Models;
 
 namespace AdvancedFinalProject.Controllers
 {
@@ -10,6 +11,7 @@ namespace AdvancedFinalProject.Controllers
     public class ProjectApi : ControllerBase
     {
 
+
         private readonly ApplicationDbContext _context;
 
         public ProjectApi(ApplicationDbContext context)
@@ -17,41 +19,31 @@ namespace AdvancedFinalProject.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        [Route("{id}")] // id = UserId
-        public async Task<IActionResult> Create(int id, [FromBody] Project project)
+
+        [HttpPost ("createproject")]
+       
+        public async Task<IActionResult> Create(ProjectDTO dto)
         {
-            if (project == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Project data is null.");
+                return BadRequest();
             }
 
-            // Ensure the user (creator) exists
-            var creator = await _context.users.FindAsync(id); // Fetch the creator user
-
-            if (creator == null)
+            
+        
+           
+            Project project = new Project
             {
-                return NotFound($"User with id {id} not found.");
-            }
-
-            // Create a new project and associate the creator
-            var projectVar = new Project
-            {
-                ProjectTitle = project.ProjectTitle,
-                ProjectDescription = project.ProjectDescription,
-                CreatorId = id,  // Set the CreatorId directly
-                Creator = creator // Set the Creator navigation property (optional)
+                ProjectDescription = dto.ProjectDescription,
+                ProjectTitle = dto.ProjectTitle,
+                CreatorId = dto.CreatorId
             };
 
-            // Add project to the context and save changes
-            _context.projects.Add(projectVar);
+
+            _context.Add(project);
             await _context.SaveChangesAsync();
 
-            // Return created project with the location of the new resource
-            return CreatedAtAction(nameof(Create), new { id = projectVar.ProjectId }, projectVar);
+            return Ok( );
         }
-
-
-
     }
 }

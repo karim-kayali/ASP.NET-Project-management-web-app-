@@ -1,21 +1,67 @@
-# Ignore user-specific files
-*.user
-*.suo
+## Ignore Visual Studio temporary files, build results, and
+## user-specific files
 
-# Ignore Visual Studio folders
-.vs/
+# Build results
 bin/
 obj/
 
-# Ignore secrets
-appsettings.Development.json
-secrets.json
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-# Ignore build outputs
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.rsuser
+*.userprefs
+
+# Debug/Release config
+*.dbmdl
+*.pdb
+*.cache
+*.log
+*.vspscc
+*.vssscc
+*.v11.suo
 *.dll
 *.exe
-*.cache
-*.pdb
 
 # Others
-*.log
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+
+# DotCover
+.idea/
+*.dotCover
+
+# Backup & crash files
+*.bak
+*.tmp
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# .NET Core
+project.lock.json
+project.assets.json
+*.deps.json
+
+# Ignore local .env or settings files if you have any
+.env
+
+# Ignore any system file
+.DS_Store
+Thumbs.db

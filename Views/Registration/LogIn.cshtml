@@ -1,4 +1,7 @@
-﻿@{
+﻿@model AdvancedFinalProject.DTO.UserDTO
+
+
+@{
     ViewData["Title"] = "Log In";
 }
 
@@ -8,12 +11,12 @@
     <div asp-validation-summary="All" class="text-danger"></div> <!-- for validation -->
 
     <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" name="email" class="form-control" required />
+        <label for="Email">Email</label>
+        <input type="Email" name="email" class="form-control" required />
     </div>
     <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" name="password" class="form-control" required />
+        <label for="Password">Password</label>
+        <input type="Password" name="password" class="form-control" required />
     </div>
     <button type="submit" class="btn btn-primary">Log In</button>
 </form>
