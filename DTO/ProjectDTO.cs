@@ -5,7 +5,7 @@ namespace AdvancedFinalProject.DTO
     public class ProjectDTO
     {
 
-        public int? ProjectId { get; set; }  
+ 
 
         [Required, StringLength(100)]
         public string ProjectTitle { get; set; }

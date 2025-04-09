@@ -1,20 +1,28 @@
 using AdvancedFinalProject.DTO;
 using AdvancedFinalProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
-
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+ 
 namespace AdvancedFinalProject.Controllers
 {
     public class RegistrationController : Controller
     {
         private ApplicationDbContext _context;
-        
+        private readonly HttpClient _httpClient;
 
-        public RegistrationController(ApplicationDbContext context )
+      
+
+        public RegistrationController(ApplicationDbContext context , HttpClient httpClient )
         {
             _context = context;
+            _httpClient = httpClient;
+           
            
         }
 
@@ -28,46 +36,32 @@ namespace AdvancedFinalProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(UserDTO dto)
         {
-            if (!ModelState.IsValid)
+            if (dto == null)
             {
-               
-                return View( );  
+                return BadRequest("Invalid data.");
             }
 
-            var user = new User
-            {
-                UserName = dto.UserName,
-                Email = dto.Email,
-                Password = dto.Password, // Ideally hash this
-            };
+            // Send the HTTP POST request to the SignUp API
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7159/api/userapi/signup", dto);
 
-            // Check if the username already exists
-            var existingUserByUsername = await _context.users
-                .FirstOrDefaultAsync(u => u.UserName == user.UserName);
-            if (existingUserByUsername != null)
+            if (response.IsSuccessStatusCode)
             {
-                ModelState.AddModelError(string.Empty, "Username is already taken");
-                return View( );   
+                var userId = await response.Content.ReadAsStringAsync();
+
+
+                HttpContext.Session.SetInt32("UserId", int.Parse(userId));
+
+                return RedirectToAction("Index", "Projects");
             }
 
-           
-            var existingUserByEmail = await _context.users
-                .FirstOrDefaultAsync(u => u.Email == user.Email);
-            if (existingUserByEmail != null)
+            else
             {
-                ModelState.AddModelError(string.Empty, "Email is already taken");
-                return View( );   
+
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, errorMessage);
+                return View(dto);  // Return the same view with error 
             }
 
-
-            HttpContext.Session.SetInt32("UserId", user.UserId);  
-
-            
-            _context.Add(user);
-            await _context.SaveChangesAsync();
-
-            return View("~/Views/Projects/Index.cshtml");
-            
         }
 
 
@@ -78,39 +72,73 @@ namespace AdvancedFinalProject.Controllers
         }
 
 
+        /*    [HttpPost]
+
+            public async Task<IActionResult> LogIn(UserDTO dto)
+            {
+
+
+                if (string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Email and Password are required.");
+                    return View();
+                }
+
+                var existingUser = await _context.users
+                    .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+                if (existingUser == null)
+                { 
+                    ModelState.AddModelError(string.Empty, "Email not found.");
+                    return View();
+                }
+
+                if (existingUser.Password != dto.Password)
+                {
+
+                    ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    return View();
+                }
+
+                HttpContext.Session.SetInt32("UserId", existingUser.UserId); // Or SetString if it's a Guid or string
+                return RedirectToAction("Index", "Projects");
+
+
+            }*/
+
+
+
         [HttpPost]
-      
-        public async Task<IActionResult> LogIn(UserDTO dto)
+        public async Task<IActionResult> LogIn(LoginUserDTO dto)
         {
              
 
+            // For login, we don't need the UserName to be validated
             if (string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
             {
-                ModelState.AddModelError(string.Empty, "Email and Password are required.");
-                return View();
+                return BadRequest("Email and password are required.");
             }
 
-            var existingUser = await _context.users
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+            // Send the HTTP POST request to the LogIn API
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7159/api/userapi/login", dto);
 
-            if (existingUser == null)
-            { 
-                ModelState.AddModelError(string.Empty, "Email not found.");
-                return View();
-            }
-
-            if (existingUser.Password != dto.Password)
+            if (response.IsSuccessStatusCode)
             {
-                
-                ModelState.AddModelError(string.Empty, "Incorrect password.");
-                return View();
+                var userId = await response.Content.ReadAsStringAsync();
+                HttpContext.Session.SetInt32("UserId", int.Parse(userId));
+
+                return RedirectToAction("Index", "Projects");
             }
-
-            HttpContext.Session.SetInt32("UserId", existingUser.UserId); // Or SetString if it's a Guid or string
-            return RedirectToAction("Index", "Projects");
-
-
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, errorMessage);
+                return View(dto);  // Return the same view with error 
+            }
         }
+
+
+
 
     }
 }

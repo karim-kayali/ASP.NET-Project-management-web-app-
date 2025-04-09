@@ -9,17 +9,25 @@ using AdvancedFinalProject;
 using AdvancedFinalProject.Models;
 using Microsoft.AspNetCore.Identity;
 using AdvancedFinalProject.DTO;
+using System.Net.Http;
 
 namespace AdvancedFinalProject.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
+        private readonly HttpClient _httpClient;
 
-        public ProjectsController(ApplicationDbContext context)
+        
+
+        public ProjectsController(ApplicationDbContext context, HttpClient httpClient)
         {
             _context = context;
+            _httpClient = httpClient;
+
+
         }
+
 
         public async Task<IActionResult> Index()
         {
@@ -27,7 +35,7 @@ namespace AdvancedFinalProject.Controllers
 
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("SignUp", "Registration");
             }
 
             var projects = await _context.projects
@@ -63,9 +71,10 @@ namespace AdvancedFinalProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProjectDTO dto)
         {
-            if (!ModelState.IsValid)
+
+            if (dto == null)
             {
-                return BadRequest();
+                return BadRequest("Invalid data.");
             }
 
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -74,15 +83,24 @@ namespace AdvancedFinalProject.Controllers
                 return RedirectToAction("LogIn", "Registration");
             }
 
-            Project project = new Project();
-            project.ProjectDescription = dto.ProjectDescription;
-            project.ProjectTitle = dto.ProjectTitle;
-            project.CreatorId = userId.Value;
+            dto.CreatorId = userId.Value; 
 
-            _context.Add(project);
-            await _context.SaveChangesAsync();
+           
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7159/api/projectapi/createproject", dto);
 
-            return RedirectToAction(nameof(Index));
+            if (response.IsSuccessStatusCode)
+            { 
+
+                return RedirectToAction("Index", "Projects");
+            }
+
+            else
+            {
+
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, errorMessage);
+                return View(dto);   
+            }
         }
 
 
@@ -134,7 +152,7 @@ namespace AdvancedFinalProject.Controllers
             _context.projects.Remove(project);  
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index)); // Redirect to the Index page after deletion
+            return RedirectToAction(nameof(Index));  
         }
 
 

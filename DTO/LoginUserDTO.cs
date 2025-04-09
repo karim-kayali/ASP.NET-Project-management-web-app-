@@ -2,12 +2,10 @@
 
 namespace AdvancedFinalProject.DTO
 {
-    public class UserDTO
+    public class LoginUserDTO
     {
 
-        [Required]
-        public string UserName { get; set; }
-
+        
         [Required, EmailAddress]
         public string Email { get; set; }
 
@@ -15,6 +13,3 @@ namespace AdvancedFinalProject.DTO
         public string Password { get; set; }
     }
 }
-
-
-
