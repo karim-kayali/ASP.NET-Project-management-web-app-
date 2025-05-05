@@ -1,4 +1,6 @@
-﻿<form asp-action="Edit" method="post">
+﻿
+
+<form asp-action="Edit" method="post">
     <input type="hidden" name="ProjectId" value="@Model.ProjectId" />
 
     <div class="form-group">
@@ -11,5 +13,7 @@
         <input name="ProjectDescription" value="@Model.ProjectDescription" class="form-control" />
     </div>
 
-    <input type="submit" value="Save" class="btn btn-primary" />
+    <input type="submit" value="💾 Save" class="btn btn-primary me-2 mt-3" />
+    <a asp-action="Index" class="btn btn-secondary mt-3">← Back to List</a>
+
 </form>

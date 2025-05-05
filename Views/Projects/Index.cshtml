@@ -2,24 +2,31 @@
 
 @{
     ViewData["Title"] = "Index";
+ 
+    int? userId = ViewData["UserId"] as int?;
 }
+<div style="position: absolute; top: 130px; right: 320px;">
+    <a asp-controller="Registration" asp-action="LogIn" class="btn btn-outline-primary"> Log out</a>
+</div>
 
-<h1>Index</h1>
+
+<h1>Projects</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success mb-3">+ Create Project</a>
+
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectTitle)
+                ProjectTitle
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectDescription)
+                ProjectDescription
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Creator)
+                Creator
             </th>
             <th></th>
         </tr>
@@ -29,17 +36,18 @@
         {
             @foreach (var item in Model)
             {
-                <tr>
+                <tr onclick="window.location='@Url.Action("Index", "Tasks", new { projectId = item.ProjectId })'" style="cursor: pointer;">
+
                     <td>
-                        @Html.DisplayFor(modelItem => item.ProjectTitle)
+                         @item.ProjectTitle
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ProjectDescription)
+                        @item.ProjectDescription
                     </td>
                     <td>
                         @if (item.Creator != null)
                         {
-                            @Html.DisplayFor(modelItem => item.Creator.UserName)
+                            @item.Creator.UserName
                         }
                         else
                         {
@@ -47,10 +55,17 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
-                    </td>
+
+                   
+                         @if (userId == item.CreatorId)   
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-sm btn-primary me-1">✏️ Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-sm btn-info text-white me-1">👁 Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-sm btn-danger">🗑 Delete</a>
+
+                        }
+                   
+                        </td>
                 </tr>
             }
         }

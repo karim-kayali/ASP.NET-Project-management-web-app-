@@ -18,8 +18,12 @@ namespace AdvancedFinalProject.Models
 
         [Required]
         public string Password { get; set; }
- 
-        public List<TaskItem> Tasks { get; set; } = new ();
+
+
+        
+        public List<TaskItem> CreatedTasks { get; set; } = new();
+
+        public List<TaskItem> AssignedTasks { get; set; } = new ();
 
         
         public List<Project> Projects { get; set; } = new();

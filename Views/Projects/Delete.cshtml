@@ -12,30 +12,30 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectTitle)
+         Title
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ProjectTitle)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectDescription)
+          Description
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ProjectDescription)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Creator)
+            Creator
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Creator.UserName)
         </dd>
     </dl>
 
-    <!-- Form for POST Delete -->
+     
     <form asp-action="Delete" method="post">
-        @Html.AntiForgeryToken()
+       
         <input type="hidden" name="id" value="@Model.ProjectId" />
-        <button type="submit" class="btn btn-danger">Delete</button> |
+        <button type="submit" class="btn btn-danger">Delete</button> 
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

@@ -22,7 +22,7 @@ namespace AdvancedFinalProject.Models
         
         public int CreatorId { get; set; }
 
-        [JsonIgnore]
+        
         public User Creator { get; set; }
 
         

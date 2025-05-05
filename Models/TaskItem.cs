@@ -8,7 +8,7 @@ namespace AdvancedFinalProject.Models
         [Key]
         public int TaskId { get; set; }
 
-        [Required, StringLength(255)]
+        
         public string TaskName { get; set; }
 
         public string? TaskDescription { get; set; }
@@ -16,7 +16,7 @@ namespace AdvancedFinalProject.Models
         public string TaskPriority { get; set; }
 
         [Required]
-        public string TaskStatus { get; set; } = "New";
+        public string TaskStatus { get; set; }  
 
         public DateTime? TaskDueDate { get; set; }
  
@@ -28,7 +28,7 @@ namespace AdvancedFinalProject.Models
         public User Assignee { get; set; }
 
         
-        public int? ProjectId { get; set; }
+        public int ProjectId { get; set; }
         public Project? project { get; set; }
     }
 }

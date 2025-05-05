@@ -1,0 +1,102 @@
+﻿@model IEnumerable<AdvancedFinalProject.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Index";
+    int? userId = ViewData["UserId"] as int?;
+}
+
+<div style="position: absolute; top: 130px; right: 320px;">
+    <a asp-controller="Registration" asp-action="LogIn" class="btn btn-outline-primary"> Log out</a>
+</div>
+
+
+
+<h1>Tasks</h1>
+
+@if (ViewBag.CreatorId == userId)
+{
+    <p>
+        <a asp-action="Create" asp-route-projectId="@ViewBag.ProjectId" class="btn btn-success me-2">
+            ➕ Create New Task
+        </a>
+    </p>
+
+    <p>
+        <a asp-action="AddMember" asp-route-projectId="@ViewBag.ProjectId" class="btn btn-info text-white">
+            👥 Manage Members
+        </a>
+    </p>
+}
+
+<a href="@Url.Action("Index", "Projects")" class="btn btn-secondary mb-3">
+    ← Go to Projects
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.TaskName
+                    </td>
+                    <td>
+                        @item.Assignee.UserName
+                    </td>
+
+
+
+                    @if ( item.Assignee.UserId==userId  || ViewBag.CreatorId==userId)
+                    {
+                        
+
+                    <td>
+                        <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                            <input type="hidden" name="TaskId" value="@item.TaskId" />
+                            <select name="TaskStatus" class="form-select form-select-sm" onchange="this.form.submit()">
+                                @{
+                                    var statuses = new[] { "New", "In Progress", "Completed" };
+                                    foreach (var status in statuses)
+                                    {
+                                        var selectedAttr = item.TaskStatus == status ? "selected=\"selected\"" : "";
+                                        @:<option value="@status" @Html.Raw(selectedAttr)>@status</option>
+                                    }
+                                }
+                            </select>
+                        </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@item.TaskStatus</td>
+                    }
+
+                    @if (userId == item.CreatorId)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-warning btn-sm text-white me-1">✏️ Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary btn-sm me-1">👁 Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger btn-sm">🗑 Delete</a>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No Tasks found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -4,6 +4,7 @@ using AdvancedFinalProject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409091745_init4")]
+    partial class init4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,8 @@ namespace AdvancedFinalProject.Migrations
 
                     b.Property<string>("TaskName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("TaskPriority")
                         .IsRequired()
@@ -84,6 +88,9 @@ namespace AdvancedFinalProject.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("TaskId");
 
                     b.HasIndex("AssignedToId");
@@ -91,6 +98,8 @@ namespace AdvancedFinalProject.Migrations
                     b.HasIndex("CreatorId");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("tasks");
                 });
@@ -151,13 +160,13 @@ namespace AdvancedFinalProject.Migrations
             modelBuilder.Entity("AdvancedFinalProject.Models.TaskItem", b =>
                 {
                     b.HasOne("AdvancedFinalProject.Models.User", "Assignee")
-                        .WithMany("AssignedTasks")
+                        .WithMany()
                         .HasForeignKey("AssignedToId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AdvancedFinalProject.Models.User", "Creator")
-                        .WithMany("CreatedTasks")
+                        .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -165,6 +174,10 @@ namespace AdvancedFinalProject.Migrations
                     b.HasOne("AdvancedFinalProject.Models.Project", "project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("AdvancedFinalProject.Models.User", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Assignee");
 
@@ -195,9 +208,7 @@ namespace AdvancedFinalProject.Migrations
 
             modelBuilder.Entity("AdvancedFinalProject.Models.User", b =>
                 {
-                    b.Navigation("AssignedTasks");
-
-                    b.Navigation("CreatedTasks");
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

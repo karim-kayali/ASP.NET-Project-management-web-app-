@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using AdvancedFinalProject;
-using Microsoft.Extensions.DependencyInjection;
+ 
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,35 @@ builder.Services.AddDbContext<ApplicationDbContext>(o =>
 
 builder.Services.AddSession();  // For managing session state
 builder.Services.AddHttpContextAccessor(); // Optional but good to have
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
+
+var key = Encoding.ASCII.GetBytes("JWT_AdvancedFinalProject_Toekn_Key");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false; // True for production
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 
 // Add HttpClient to the services for API calls
 builder.Services.AddHttpClient();
@@ -37,20 +69,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession();   
+
+app.UseAuthentication(); 
 
 
 app.UseRouting();
-
-// For Authorization (if needed)
+ 
 app.UseAuthorization();
 
-// Map MVC routes
+ 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Registration}/{action=SignUp}");
 
-// Map API routes
-app.MapControllers();  // This will map API routes (including /api/ProjectApi)
+ app.MapControllers();  // This will map API routes (including /api/ProjectApi)
 
 app.Run();

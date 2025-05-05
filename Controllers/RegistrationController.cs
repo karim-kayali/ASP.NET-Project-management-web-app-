@@ -33,6 +33,9 @@ namespace AdvancedFinalProject.Controllers
         {
             return View("SignUp");
         }
+
+
+
         [HttpPost]
         public async Task<IActionResult> SignUp(UserDTO dto)
         {
@@ -46,10 +49,16 @@ namespace AdvancedFinalProject.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                var userId = await response.Content.ReadAsStringAsync();
+                var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                var token = json["token"];
 
-
-                HttpContext.Session.SetInt32("UserId", int.Parse(userId));
+                HttpContext.Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
+                });
 
                 return RedirectToAction("Index", "Projects");
             }
@@ -108,24 +117,35 @@ namespace AdvancedFinalProject.Controllers
 
 
 
+
+
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginUserDTO dto)
         {
              
 
-            // For login, we don't need the UserName to be validated
+           
             if (string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
             {
                 return BadRequest("Email and password are required.");
             }
 
-            // Send the HTTP POST request to the LogIn API
+         
             var response = await _httpClient.PostAsJsonAsync("https://localhost:7159/api/userapi/login", dto);
 
             if (response.IsSuccessStatusCode)
             {
-                var userId = await response.Content.ReadAsStringAsync();
-                HttpContext.Session.SetInt32("UserId", int.Parse(userId));
+                var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                var token = json["token"];
+
+                
+                HttpContext.Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
+                });
 
                 return RedirectToAction("Index", "Projects");
             }
